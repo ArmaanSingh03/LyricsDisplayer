@@ -74,6 +74,7 @@
                     <h3>Type, paste, or upload song lyrics</h3>
                     <textarea id="lyrics-input" rows="10" cols="60" placeholder="Enter lyrics here..."></textarea><br>
                     <input type="file" id="lyrics-file" accept=".txt"><br>
+                    
                     <!-- custom control -->
                     <div id="custom-controls" style="margin:10px 0;">
                         <label>Text color: <input type="color" id="text-color" value="#000000"></label>
@@ -98,6 +99,7 @@
                     <button id="play-btn" class="play-button">Play Lyrics</button>
                 </section>
             </div>
+            
             <div id="lyrics-output-area" style="flex:1; min-width:300px; display:flex; align-items:center; justify-content:center;">
                 <div id="lyrics-box" style="
                         margin-top:20px;
@@ -130,7 +132,8 @@
             lyricsBox.textContent = ''; 
             let idx = 0;
             if (!text) return;
-            // apply current customization settings
+
+            
             const color = document.getElementById('text-color').value;
             const bg = document.getElementById('bg-color').value;
             const size = document.getElementById('font-size').value;
@@ -144,7 +147,7 @@
             const interval = setInterval(() => {
                 lyricsBox.textContent += text[idx];
                 idx++;
-                // check if overflow, clear if so
+                
                 if (lyricsBox.scrollHeight > lyricsBox.clientHeight) {
                     lyricsBox.textContent = '';
                 }
@@ -168,4 +171,5 @@
         });
     </script>
 </body>
+
 </html>
