@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+        }
+        nav {
+            background-color: #555;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        main {
+            padding: 20px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .play-button {
+            background-color: #1506e9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .play-button:hover {
+            background-color: #e10b0b;
+        }
+        .play-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Lyrics Displayer (Prototype)</h1>
+    </header>
+    
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    
+    <main>
+        <h2 style="background-color: black;color: #f9f9f9; width: 100%; height: 30px; text-align:center; ">Lyrics Displayer</h2>
+        
+        <div id="lyrics-container" style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div id="lyrics-input-area" style="flex:1; min-width:300px;">
+                <section id="lyrics-section">
+                    <h3>Type, paste, or upload song lyrics</h3>
+                    <textarea id="lyrics-input" rows="10" cols="60" placeholder="Enter lyrics here..."></textarea><br>
+                    <input type="file" id="lyrics-file" accept=".txt"><br>
+                    <!-- custom control -->
+                    <div id="custom-controls" style="margin:10px 0;">
+                        <label>Text color: <input type="color" id="text-color" value="#000000"></label>
+                        <label style="margin-left:10px;">Background: <input type="color" id="bg-color" value="#f9f9f9"></label>
+                        <label style="margin-left:10px;">Font size: <input type="number" id="font-size" value="42" min="8" max="72" style="width:60px;">px</label>
+                        <label style="margin-left:10px;">Font family: 
+                            <select id="font-family">
+                                <option value="monospace" selected>Monospace</option>
+                                <option value="sans-serif">Sans-serif</option>
+                                <option value="serif">Serif</option>
+                                <option value="cursive">Cursive</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Helvetica">Helvetica</option>
+                                <option value="Courier New">Courier New</option>
+                                <option value="Impact">Impact</option>
+                            </select>
+                        </label>
+                    </div>
+                    <button id="play-btn" class="play-button">Play Lyrics</button>
+                </section>
+            </div>
+            <div id="lyrics-output-area" style="flex:1; min-width:300px; display:flex; align-items:center; justify-content:center;">
+                <div id="lyrics-box" style="
+                        margin-top:20px;
+                        padding:40px;
+                        border:5px solid #201919;
+                        border-radius: 10px;
+                        width:300px;
+                        height:300px;
+                        white-space:pre-wrap;
+                        overflow:auto;
+                        font-family:monospace;
+                        background:#f9f9f9;
+                    "></div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <p> Prototype by Armaan Singh</p>
+    </footer>
+
+    <script>
+        
+        const playBtn = document.getElementById('play-btn');
+        const lyricsInput = document.getElementById('lyrics-input');
+        const lyricsBox = document.getElementById('lyrics-box');
+
+        playBtn.addEventListener('click', () => {
+            const text = lyricsInput.value;
+            lyricsBox.textContent = ''; 
+            let idx = 0;
+            if (!text) return;
+            // apply current customization settings
+            const color = document.getElementById('text-color').value;
+            const bg = document.getElementById('bg-color').value;
+            const size = document.getElementById('font-size').value;
+            const family = document.getElementById('font-family').value;
+            lyricsBox.style.color = color;
+            lyricsBox.style.backgroundColor = bg;
+            lyricsBox.style.fontSize = size + 'px';
+            lyricsBox.style.fontFamily = family;
+            
+            playBtn.disabled = true;
+            const interval = setInterval(() => {
+                lyricsBox.textContent += text[idx];
+                idx++;
+                // check if overflow, clear if so
+                if (lyricsBox.scrollHeight > lyricsBox.clientHeight) {
+                    lyricsBox.textContent = '';
+                }
+                if (idx >= text.length) {
+                    clearInterval(interval);
+                    playBtn.disabled = false;
+                }
+            }, 100); // adjust speed 
+        });
+
+        
+        const lyricsFile = document.getElementById('lyrics-file');
+        lyricsFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                lyricsInput.value = reader.result;
+            };
+            reader.readAsText(file);
+        });
+    </script>
+</body>
+</html>
